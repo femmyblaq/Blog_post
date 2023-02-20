@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const _ = require("lodash");
 const app = express();
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -16,7 +17,7 @@ let contactContent =
 let posts = [];
 
 app.get("/", (req, res) => {
-  res.render("home", { homeContent: homeContent, myInputBlogs: posts.title });
+  res.render("home", { homeContent: homeContent, posts: posts });
 });
 app.get("/about", (req, res) => {
   res.render("about", { aboutContent: aboutContent });
@@ -28,14 +29,24 @@ app.get("/compose", (req, res) => {
   res.render("compose");
 });
 app.post("/compose", (req, res) => {
-  const blogTitle = req.body.composeTitle;
-  const blogPost = req.body.composeText;
   const post = {
-    title: blogTitle,
-    bodyPost: blogPost,
+    title: req.body.composeTitle,
+    bodyPost: req.body.composeText,
   };
   posts.push(post);
   res.redirect("/");
+});
+app.get("/posts/:postName", (req, res) => {
+  const requestTitle = _.lowerCase(req.params.postName);
+  posts.forEach(function (post) {
+    const storedTitle = _.lowerCase(post.title);
+    if (requestTitle === storedTitle) {
+      res.render("post", {
+        title: post.title,
+        content: post.bodyPost,
+      });
+    }
+  });
 });
 const port = 3000;
 app.listen(port, () => console.log(`Server running at post ${port}`));

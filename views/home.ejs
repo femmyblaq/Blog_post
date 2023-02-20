@@ -1,10 +1,17 @@
 <%- include("partials/header") -%>
 
-<body>
-    <div class="card w-75 mx-auto my-5 shadow-sm rounded-3 p-4">
-        <h3 class="fw-bold">Home</h3>
+<body class="vh-100">
+    <div class="card w-75 mx-auto my-4 shadow-sm rounded-3 p-4">
+        <h4 class="fw-bold">Home</h4>
         <p><%= homeContent %></p>
-        <% console.log(myInputBlogs) %>
     </div>
+    <% posts.forEach(function(post) {%>
+    <div class=" w-75 mx-auto my-4  p-4">
+
+        <h4><%=  post.title  %></h4>
+        <p><%=  post.bodyPost.substring(0, 100) + " ..."  %>
+            <a href="/posts/<%=post.title%>">Read more</a></p>
+    </div>
+    <% })%>
 </body>
 <%- include("partials/footer") -%>
